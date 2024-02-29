@@ -36,5 +36,10 @@ namespace EmployeeManagement.Controllers
             };
             return View(viewModel);
         }
+        
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }
