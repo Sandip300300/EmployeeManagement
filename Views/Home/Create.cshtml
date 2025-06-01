@@ -1,0 +1,48 @@
+﻿@model Employee
+@{
+    ViewBag.Title = "Create Employee";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Create Employee</h4>
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <span asp-validation-for="Name" class="text-danger"></span>
+
+            <form asp-controller="home" asp-action="create" method="post">
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter full name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter email address" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-2">
+                    <label asp-for="Department"></label>
+                    <select asp-for="Department" class="form-control"
+                            asp-items="Html.GetEnumSelectList<Dept>()">
+                        <option value="">-- Select Department --</option>
+                    </select>
+                    <span asp-validation-for="Department" class="text-danger"></span>
+                </div>
+
+                <div class="text-right mt-6">
+                    <button type="submit" class="btn btn-success px-6">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
