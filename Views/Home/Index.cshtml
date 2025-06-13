@@ -1,23 +1,28 @@
-﻿@model IEnumerable<EmployeeManagement.Models.Employee>
+﻿@model IEnumerable<Employee>
 
-<div class="container">
-    <div class="row">
-        @foreach (var employee in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h5 class="card-title">@employee.Name</h5>
-                    </div>
-                    <img class="card-img-top" src="~/images/a-unique-design-icon-of-employee-management-vector.jpg" alt="Employee Image" />
-                    <div class="card-body text-center">
-                        <a asp-controller="home" asp-action="details"
-                           asp-route-id="@employee.Id" class="btn btn-primary m-1">View</a>
-                        <a href="#" class="btn btn-secondary m-1">Edit</a>
-                        <a href="#" class="btn btn-danger m-1">Delete</a>
-                    </div>
-                </div>
+@{
+    ViewBag.Title = "Employee List";
+}
+
+
+<div class="card-deck">
+    @foreach (var employee in Model)
+    {
+        var photoPath = "~/images/" + (employee.PhotoPath ?? "noimage.jpg");
+        <div class="card m-3" style="min-width: 18rem; max-width:30.5%;">
+            <div class="card-header">
+                <h3>@employee.Name</h3>
             </div>
-        }
-    </div>
+
+            <img class="card-img-top imageThumbnail" src="@photoPath"
+                 asp-append-version="true" />
+
+            <div class="card-footer text-center">
+                <a asp-controller="home" asp-action="details" asp-route-id="@employee.Id"
+                   class="btn btn-primary m-1">View</a>
+                <a href="#" class="btn btn-primary m-1">Edit</a>
+                <a href="#" class="btn btn-danger m-1">Delete</a>
+            </div>
+        </div>
+    }
 </div>
