@@ -1,8 +1,8 @@
-using System.Diagnostics;
 using EmployeeManagement.Models;
 using EmployeeManagement.Repository;
 using EmployeeManagement.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace EmployeeManagement.Controllers
 {
@@ -66,6 +66,89 @@ namespace EmployeeManagement.Controllers
             Employee newEmployee = _employeeRepository.Add(employee);
             return RedirectToAction("details", new { id = newEmployee.Id });
         }
+
+        [HttpGet]
+        public ViewResult Edit(int id)
+        {
+            Employee employee = _employeeRepository.GetEmployee(id);
+            EmployeeEditViewModel employeeEditViewModel = new EmployeeEditViewModel
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                Email = employee.Email,
+                Department = employee.Department,
+                ExistingPhotoPath = employee.PhotoPath
+            };
+            return View(employeeEditViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(EmployeeEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Employee employee = _employeeRepository.GetEmployee(model.Id);
+                if (employee == null)
+                {
+                    return NotFound();
+                }
+
+                employee.Name = model.Name;
+                employee.Email = model.Email;
+                employee.Department = model.Department;
+
+                if (model.Photo != null && model.Photo.Length > 0)
+                {
+                    if (!string.IsNullOrEmpty(model.ExistingPhotoPath))
+                    {
+                        var existingFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", model.ExistingPhotoPath);
+                        if (System.IO.File.Exists(existingFilePath))
+                        {
+                            System.IO.File.Delete(existingFilePath);
+                        }
+                    }
+
+                    var fileName = Path.GetFileName(model.Photo.FileName);
+                    var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images");
+                    var filePath = Path.Combine(uploads, fileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        model.Photo.CopyTo(fileStream);
+                    }
+
+                    employee.PhotoPath = fileName;
+                }
+
+                _employeeRepository.Update(employee); // Assuming Update() exists in your repository
+                return RedirectToAction("details", new { id = employee.Id });
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var employee = _employeeRepository.GetEmployee(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            // Delete photo from wwwroot/images
+            if (!string.IsNullOrEmpty(employee.PhotoPath))
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", employee.PhotoPath);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
+
+            _employeeRepository.Delete(id); // Make sure this method exists in your repository
+            return RedirectToAction("index"); // Redirect to landing/list page
+        }
+
 
         public IActionResult Privacy()
         {

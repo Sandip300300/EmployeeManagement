@@ -4,25 +4,33 @@
     ViewBag.Title = "Employee List";
 }
 
+<div class="container mt-4">
+    <div class="row">
+        @foreach (var employee in Model)
+        {
+            var photoPath = "~/images/" + (employee.PhotoPath ?? "noimage.jpg");
+            <div class="col-md-4 mb-4 d-flex">
+                <div class="card w-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">@employee.Name</h5>
+                    </div>
 
-<div class="card-deck">
-    @foreach (var employee in Model)
-    {
-        var photoPath = "~/images/" + (employee.PhotoPath ?? "noimage.jpg");
-        <div class="card m-3" style="min-width: 18rem; max-width:30.5%;">
-            <div class="card-header">
-                <h3>@employee.Name</h3>
+                    <div class="overflow-hidden" style="height: 200px;">
+                        <img src="@photoPath"
+                             asp-append-version="true"
+                             class="card-img-top w-100 h-100 object-fit-cover" />
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-center gap-2 flex-wrap">
+                        <a asp-controller="home" asp-action="details" asp-route-id="@employee.Id" class="btn btn-primary">View</a>
+                        <a asp-controller="home" asp-action="edit" asp-route-id="@employee.Id" class="btn btn-warning">Edit</a>
+                        <form asp-action="Delete" method="post" asp-route-id="@employee.Id" onsubmit="return confirm('Are you sure you want to delete this employee?');" class="d-inline">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+
+                </div>
             </div>
-
-            <img class="card-img-top imageThumbnail" src="@photoPath"
-                 asp-append-version="true" />
-
-            <div class="card-footer text-center">
-                <a asp-controller="home" asp-action="details" asp-route-id="@employee.Id"
-                   class="btn btn-primary m-1">View</a>
-                <a href="#" class="btn btn-primary m-1">Edit</a>
-                <a href="#" class="btn btn-danger m-1">Delete</a>
-            </div>
-        </div>
-    }
+        }
+    </div>
 </div>
