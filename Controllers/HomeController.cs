@@ -1,6 +1,7 @@
 using EmployeeManagement.Models;
 using EmployeeManagement.Repository;
 using EmployeeManagement.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -17,12 +18,14 @@ namespace EmployeeManagement.Controllers
             _employeeRepository = employeeRepository;
         }
 
+        [AllowAnonymous]
         public ViewResult Index()
         {
             var model = _employeeRepository.GetAllEmployee();
             return View(model);
         }
 
+        [AllowAnonymous]
         public ViewResult Details(int id)
         {
             var viewModel = new HomeDetailsViewModel()
