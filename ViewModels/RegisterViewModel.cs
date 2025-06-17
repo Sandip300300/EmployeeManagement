@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace EmployeeManagement.ViewModels
 {
@@ -6,6 +7,7 @@ namespace EmployeeManagement.ViewModels
     {
         [Required]
         [EmailAddress]
+        [Remote("IsEmailInUse", "Account")]
         public string Email { get; set; }
 
         [Required]
