@@ -61,9 +61,12 @@
             }
         </div>
         <div class="card-footer">
-            <a href="#" style="width:auto" class="btn btn-primary">
-                Manage Roles
-            </a>
+            <div class="text-wrap text-break">
+                <a asp-action="ManageUserRoles" asp-route-userId="@Model.Id"
+                   class="btn btn-primary w-30">
+                    Manage Roles
+                </a>
+            </div>
         </div>
     </div>
 
